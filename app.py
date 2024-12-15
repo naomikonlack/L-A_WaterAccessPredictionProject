@@ -14,15 +14,15 @@ st.markdown(
     """
     <style>
     body {
-        background-color: #f0f9ff; /* Light pastel blue for a fresh look */
+        background-color: #e7f3ff; /* Light blue for a calm water theme */
         font-family: 'Arial', sans-serif;
     }
     h1, h2, h3 {
         text-align: center;
-        color: #005b96; /* Darker blue for headings */
+        color: #004aad; /* Darker water blue */
     }
     .stButton>button {
-        background-color: #005b96; /* Button color */
+        background-color: #004aad; /* Button color */
         border: none;
         color: white;
         border-radius: 12px;
@@ -38,15 +38,15 @@ st.markdown(
         position: absolute;
         right: 0;
         width: 500px; /* Increased sidebar width */
-        background-color: #e3f2fd; /* Lighter blue sidebar */
+        background-color: #dbe9f6; /* Light pastel blue for sidebar */
         box-shadow: -2px 0px 5px rgba(0,0,0,0.1);
     }
     .footer {
         background-color: #004aad; /* Blue footer background */
-        color: #f9f9f9; /* Light text for footer */
+        color: #ffffff; /* Light text for footer */
         text-align: center;
         padding: 20px;
-        font-size: 14px;
+        font-size: 16px;
         margin-top: 30px;
         border-radius: 10px;
     }
@@ -61,10 +61,18 @@ st.markdown(
 
 # App Title
 st.title("🌟 Water Access Predictor By Leslie And Aaron 🌟")
-st.subheader("💧 Predict water access levels with a splash! 💧")
+st.subheader("💧 Predict water access levels with meaningful insights! 💧")
 
 # Sidebar inputs for direct features
-st.sidebar.header("🌊 Input Your Features")
+st.sidebar.header("🌊 Input Key Water Access and Population Metrics")
+st.sidebar.markdown(
+    """
+    📋 **Feature Descriptions:**  
+    - **Urban Population (%):** The percentage of the total population living in urban areas.  
+    - **Basic Water Access (%):** Percentage of the population with access to clean, safe drinking water.  
+    - **Surface Water Access (%):** Percentage of the population relying on untreated surface water sources.  
+    """
+)
 year = st.sidebar.number_input("📅 Year", min_value=2000, max_value=2025, value=2020, step=1)
 pop_n = st.sidebar.number_input("👨‍👩‍👧‍👦 Total Population (millions)", min_value=0.0, value=1000.0, step=1.0)
 pop_u = st.sidebar.slider("🏙️ Urban Population Percentage", min_value=0.0, max_value=100.0, value=50.0, step=0.1)
@@ -136,23 +144,35 @@ try:
     # Prediction button
     if st.button("💧 Predict Now!"):
         prediction = model.predict(input_data_scaled)
-        st.success(f"🌟 Predicted Basic Water Access (%): {prediction[0]:.2f}")
+        basic_water_access_pct = 100 - prediction[0]  # Calculate basic water access percentage
+        total_population = pop_n * 1_000_000  # Convert millions to actual population
+        people_with_access = (basic_water_access_pct / 100) * total_population
+
+        st.success(
+            f"🌟 Predicted Basic Water Access: {basic_water_access_pct:.2f}%.\n\n"
+            f"💧 This means approximately {people_with_access:,.0f} people out of {total_population:,.0f} "
+            f"will have access to at least basic water services, including piped water, wells, or clean drinking sources."
+        )
+        if basic_water_access_pct > 80:
+            st.info("👍 Great! Most of the population has access to basic water services.")
+        elif basic_water_access_pct < 50:
+            st.warning("⚠️ A significant portion of the population lacks access to basic water services.")
         st.balloons()
 
 except Exception as e:
     st.error(f"❌ Error during prediction: {e}")
 
-# Dynamic Footer with formulas
+# Footer explanation
 st.markdown(
     """
     <div class="footer">
-        <p><strong>Derived Feature Formulas:</strong></p>
-        <p>1. <strong>Year Squared:</strong> year_squared = year²</p>
-        <p>2. <strong>Rural Population (%):</strong> pop_r = 100 - pop_u</p>
-        <p>3. <strong>Urban-Unimproved Interaction:</strong> pop_unimp_interaction = pop_u × wat_unimp_n</p>
-        <p>4. <strong>Rural-Limited Interaction:</strong> pop_r_lim_interaction = pop_r × wat_lim_n</p>
-        <p>5. <strong>Log Surface Water Access:</strong> wat_sur_n_log = log(1 + wat_sur_n)</p>
-        <p>Thank you for using our water access prediction app!</p>
+        <p><strong>What Does This App Do?</strong></p>
+        <p>This app predicts the percentage of a population with access to basic water services, using a machine learning model trained on historical water access data. 
+        It also estimates the total number of people with access based on the input population size.</p>
+        <p>Users input key metrics such as urban and rural population percentages, water access levels (e.g., unimproved, limited, and surface water), and year. 
+        Derived features are calculated automatically to capture interactions and trends in the data.</p>
+        <p><strong>Use Case:</strong> This tool can help policymakers and researchers understand water access trends, predict future accessibility, and plan interventions to improve water availability where needed.</p>
+        <p>Thank you for using the Water Access Predictor! 💧</p>
     </div>
     """,
     unsafe_allow_html=True,

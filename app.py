@@ -9,51 +9,60 @@ try:
 except Exception as e:
     st.error(f"❌ Error loading model or scaler: {e}")
 
-# Custom theme: Improved background and sidebar styling
 st.markdown(
     """
     <style>
+    /* General body styling */
     body {
-        background-color: #f0f8ff; /* Alice blue for a calm water theme */
+        background-color: #f0f8ff; /* Alice blue */
         font-family: 'Roboto', sans-serif;
     }
+
+    /* Headings */
     h1, h2, h3 {
         text-align: center;
-        color: #0056a3; /* Deep blue for text */
+        color: #0056a3; /* Deep blue */
     }
-    .stButton>button {
-        background-color: #0056a3; /* Button color */
-        border: none;
-        color: white;
-        border-radius: 10px;
-        font-size: 18px;
-        padding: 10px 20px;
-        font-weight: bold;
-    }
-    .stButton>button:hover {
-        background-color: #003f78;
-        color: white;
-        transition: 0.3s ease;
-    }
+
+    /* Sidebar Background */
     [data-testid="stSidebar"] {
-        position: fixed;
-        left: 0; /* Always visible for mobile */
-        width: 400px; /* Sidebar width */
-        background-color: #e3f2fd; /* Light blue for sidebar */
-        box-shadow: 2px 0px 5px rgba(0,0,0,0.1);
-        color: black; /* Ensure non-major text is black */
+        background-color: #1f2937 !important; /* Dark slate gray */
+        color: #ffffff !important; /* White text */
     }
-    .footer {
-        background-color: #0056a3;
-        color: white;
-        text-align: center;
-        padding: 15px;
-        font-size: 16px;
-        border-radius: 8px;
+
+    /* Sidebar Headings */
+    [data-testid="stSidebar"] h1, 
+    [data-testid="stSidebar"] h2, 
+    [data-testid="stSidebar"] h3 {
+        color: #f9fafb !important; 
+        font-size: 18px !important;
     }
-    .footer p {
-        margin: 0;
-        padding: 5px;
+
+    /* Radio Group - Fixing All Labels */
+    div[data-baseweb="radio"] {
+        color: #ffffff !important; /* Force white text */
+    }
+    div[data-baseweb="radio"] span {
+        color: #ffffff !important; /* Ensure all options are white */
+        font-size: 15px !important;
+    }
+
+    /* Selected Radio Option Highlight */
+    div[data-baseweb="radio"] [aria-checked="true"] span {
+        color: #90cdf4 !important; /* Light blue for active */
+        font-weight: bold !important;
+    }
+
+    /* Slider Labels and Values */
+    .stSlider label, .stSlider div {
+        color: #f9fafb !important; /* White for sliders */
+    }
+
+    /* Sidebar Markdown Text (Fix for Text like 'Input Type') */
+    [data-testid="stSidebar"] p, 
+    [data-testid="stSidebar"] label {
+        color: #ffffff !important; /* White text */
+        font-size: 15px !important;
     }
     </style>
     """,
